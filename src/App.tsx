@@ -1,9 +1,12 @@
 import React from 'react';
-
+import Flights from './components/flights';
+import { Container } from '@mui/material'
 function App() {
   return (
     <div className="App">
-Hello world
+      <Container >
+        <Flights />
+      </Container>
     </div>
   );
 }
