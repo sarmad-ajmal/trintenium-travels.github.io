@@ -4,6 +4,7 @@ import queryString from "query-string";
 const useFlights = () => {
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
+  const [flightsFetchedOnce, setFlightsFetchedOnce] = useState<boolean>(false);
   const fromRef = useRef<number | null>(null);
   const toRef = useRef<number | null>(null);
   const dateRef = useRef<string>("");
@@ -18,7 +19,7 @@ const useFlights = () => {
     dateRef.current = date;
   };
   const onFetch = async () => {
-    if (!dateRef.current && fromRef.current == null) {
+    if (fromRef.current == null) {
       return;
     }
     try {
@@ -33,15 +34,22 @@ const useFlights = () => {
       );
       const json = await response.json();
       const trips = json.result.trips;
+      if (!flightsFetchedOnce) {
+        setFlightsFetchedOnce(true);
+      }
       setFlights(trips);
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      if (!flightsFetchedOnce) {
+        setFlightsFetchedOnce(true);
+      }
     }
   };
   return {
     loading,
     flights,
+    flightsFetchedOnce,
     onFetch,
     onChangeDate,
     onChangeFromAirport,

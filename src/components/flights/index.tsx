@@ -1,4 +1,4 @@
-import { Paper, Grid, Typography, Stack, IconButton } from '@mui/material'
+import { Box, Paper, Grid, Typography, Stack, IconButton, CircularProgress } from '@mui/material'
 import { Search } from '@mui/icons-material'
 
 import { DatePicker, AirportsAutocomplete } from '../../common/components';
@@ -6,7 +6,7 @@ import useFlights from './index.hook';
 import FlightsList from './flights_list';
 
 const Flights = () => {
-  const { loading, flights, onChangeDate, onChangeFromAirport, onChangeToAirport, onFetch } = useFlights()
+  const { loading, flights, flightsFetchedOnce, onChangeDate, onChangeFromAirport, onChangeToAirport, onFetch } = useFlights()
   return <Paper elevation={0} style={{ width: '100%' }}>
     <Typography variant='h4'>
       Flight Planner
@@ -32,7 +32,15 @@ const Flights = () => {
       </Grid>
       <Grid ></Grid>
     </Stack>
-    <FlightsList flights={flights} />
+
+    {!loading && !flights.length && flightsFetchedOnce && <Box justifyContent='center' marginTop={10} display='flex'>
+      <Typography variant='subtitle1'>Nothing to show</Typography>
+
+    </Box>}
+    {loading && <Box justifyContent='center' marginTop={10} display='flex'>
+      <CircularProgress />
+    </Box>}
+    {!loading && <FlightsList flights={flights} />}
   </Paper>
 }
 
